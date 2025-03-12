@@ -594,11 +594,42 @@ pie_sites |>
   geom_jitter(size =.25) + 
   theme(legend.postition = "none")
 ```
-The ANOVA test shows that at least one of our site means is significantly different from the others (p-value < 2.2e-16) while the post-hoc Tukey test determines which groups are different from each other
+The ANOVA test shows that at least one of our site means is significantly different from the others (p-value < 2.2e-16) while the post-hoc Tukey test determines which groups are different from each other in carapace width based on latitude. Sites GTM and DB are statistically different from each other (p adj < 0.05, p adj = 3.0e-07). All sites included in these tests are statistically different from each other shown by the small p adj values (PIE-DB p adj = 2.9e-06, PIE-GTM p adj = 0.0e+00). We can also detect these differences using the visual boxplot representation of the model. 
+
+$site
+             diff       lwr       upr   p adj
+GTM-DB  -3.200786 -4.507850 -1.893722 3.0e-07
+PIE-DB   2.899929  1.592865  4.206992 2.9e-06
+PIE-GTM  6.100714  4.771306  7.430123 0.0e+00
 
 2.  Conduct a simple linear regression for the effect of `water_temp_sd` (a measure reflecting annual variation in water temperature) on carapace width. Report your findings (include code *and* a sentence reporting the results) AND create a plot with a line of best fit. *Include both the code to create the plot and an image of the figure*. (10 pts).
+```{r}
+pie_temp_lm <- lm(size ~ water_temp_sd, data = pie_crab)
+
+#view the results of the linear model
+summary(pie_temp_lm)
+```
+
+```{r}
+pie_crab |> 
+  ggscatter(x = 'water_temp_sd', y = 'size', 
+            alpha = .35, 
+            add = "reg.line")
+```
+The linear regression model shows that there is not a significant impact of water temperature on crab carapace width (Multiple R-squared:  0.001024). This model is not statistically significant (p-value = 0.5275).
 
 3.  Conduct a multiple linear regression for the effects of `latitude`, `air_temp_sd`, and `water_temp_sd` on carapace width. **First** check for correlations among the three predictor variables (and report the correlation table) and **second** report your findings from the multiple linear regression (code *and* a sentence reporting the results). (10 pts.)
+```{r}
+pie_effects_mlm <- lm(size ~ latitude + air_temp_sd + water_temp_sd, data = pie_crab)
+
+summary(pie_effects_mlm)
+```
+```{r}
+pie_crab |> 
+  dplyr::select(latitude, air_temp_sd, water_temp_sd) |> 
+  cor()
+```
+The multiple linear regression model is statistically significant (p-value < 2.2e-16), showing the combination of variables accounts for 35% of variation (Multiple R-squared:  0.3516). Latitude is the most significant factor influencing crab carapace width (p-val < 2e-16). The model shows that there is not a significant impact of the combination of latitude, air temperature, and water temperature on carapace width. 
 
 ## Acknowledgements
 
