@@ -5,6 +5,7 @@ format:
    html:
     code-fold: true
     toc: true
+    self-contained: true
 subtitle: 'Introduction to Statistics in R'
 ---
 
